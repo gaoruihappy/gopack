@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+
+
+var babelRegister = require("babel-register")
+babelRegister({
+  presets:[require('../src/babel/fe-present')()],
+  extensions: '.js'
+})
+require("../src/index")
