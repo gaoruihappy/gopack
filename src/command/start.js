@@ -11,9 +11,7 @@ import conf from '../service/conf.js'
 // }
 var optimist= require('optimist');
 export default (args)=>{
-	// console.log(args)
 	var argv = optimist.argv
-	// console.log(argv.nohash)
-	// console.log(argv.aa)
+	// console.log(argv)
 	conf(args)
 }

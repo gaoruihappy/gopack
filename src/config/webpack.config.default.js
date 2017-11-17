@@ -1,52 +1,64 @@
+// var path = require('path')
+// var fs =   require('fs')
+// module.exports = function(webpackConfig, redSkull,config,WebPack){
+
+//     return webpackConfig
+// }
 var path = require('path');
-var webpack = require('webpack')
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
-var OpenBrowserPlugin = require('open-browser-webpack-plugin');
-let devServerUrl = "http://127.0.0.1:9090"
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var webpack = require('webpack');
+
 module.exports = {
-  entry: {
-     head: './src4',
-     main: './src5'
-   },
-  output: {
-    filename: '[name].js',
-    path: path.resolve(__dirname, 'dist')
+  entry:process.cwd()+'/src/index.js',
+  output:{
+    path: path.join(process.cwd(), "dist"),
+    filename:"[name].js",
+    publicPath:"/",
   },
-  aa:{
-    aa:1
-  },
-  module: {
-          loaders: [{
-            test: /\.js$/,         // Match both .js and .jsx files
-            exclude: /node_modules/,
-            loader: "babel-loader",
-            query: {
-                    "presets": ['es2015', 'react',"stage-2"]
-                }
-          },
-          {
-            test: /\.less$/,
-            use: ExtractTextPlugin.extract({
-              fallback: "style-loader",
-              use: "css-loader"
-            })
-          }
-        ]
-  },
-  plugins: [
-         new HtmlWebpackPlugin({  // Also generate a test.html 
-          filename: 'index.html',
-          title: 'Custom template',
-          inject: false,
-          template: 'my-index.ejs'
-        }),
-        new ExtractTextPlugin("styles.css"),
-        new OpenBrowserPlugin({ url: 'http://localhost:9090' })
+  plugins:[
+    new HtmlWebpackPlugin({
+      template:"./my-index.ejs",
+    }),
+    new ExtractTextPlugin({
+      filename: '[name].css',
+    }),
+  ],
+  module:{
+    rules:[
+      {
+        test:/\.js$/,
+        include:path.join(process.cwd(), "src"),
+        loader:"babel-loader",
+        options:{
+          presets:[
+            "react",
+            "stage-2",
+          ],
+        },
+      },
+      {
+        test:/\.less$/,
+        use:ExtractTextPlugin.extract({
+          fallback:"style-loader",
+          use:"css-loader",
+        })
+      },
+      {
+        test:/\.(jpe?g|png|gif|svg)$/i,
+        loader:"url-loader",
+      },
     ],
-    resolve:{
-      alias:{
-        aa:'../src4/aa'
-      }
-    }
-  };
+  },
+  resolve:{
+    alias:{
+      "components":path.join(process.cwd(), "src/components"),
+    },
+  },
+  devtool:"eval",
+  devServer:{
+    port: 7007,
+    historyApiFallback: true,
+    contentBase: path.join(process.cwd(), "dist"),
+  },
+}
